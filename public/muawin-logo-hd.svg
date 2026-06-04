@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Muawin High Definition SVG Asset -->
+  <!-- Outer Roof (Muawin Teal #088771) -->
+  <path d="M12 52L50 10L88 52" stroke="#088771" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Inner Roof (Muawin Gold #FFB800) -->
+  <path d="M24 50L50 22L76 50" stroke="#FFB800" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- House Structure (Muawin Teal #088771) -->
+  <path d="M32 50V74C32 80.6274 37.3726 86 44 86H56C62.6274 86 68 80.6274 68 74V50" stroke="#088771" stroke-width="10" stroke-linecap="round"/>
+  <path d="M50 86V66" stroke="#088771" stroke-width="10" stroke-linecap="round"/>
+</svg>

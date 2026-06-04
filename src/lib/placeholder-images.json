@@ -1,0 +1,88 @@
+{
+  "placeholderImages": [
+    {
+      "id": "cat-maid",
+      "description": "Professional house maid service",
+      "imageUrl": "https://images.unsplash.com/flagged/photo-1567769996388-b8ea0ec54fb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxtYWlkJTIwY2xlYW5pbmd8ZW58MHx8fHwxNzcxNzY0MTA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "maid cleaning"
+    },
+    {
+      "id": "cat-driver",
+      "description": "Professional driver service",
+      "imageUrl": "https://images.unsplash.com/photo-1543215144-3d2954c44b20?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjaGF1ZmZldXIlMjBkcml2aW5nfGVufDB8fHx8MTc3MTc2NDEwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chauffeur driving"
+    },
+    {
+      "id": "cat-babysitter",
+      "description": "Trusted babysitter service",
+      "imageUrl": "https://images.unsplash.com/photo-1763493323825-1839b7d96b27?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYWJ5c2l0dGVyJTIwY2hpbGRjYXJlfGVufDB8fHx8MTc3MTc2NDEwOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "babysitter childcare"
+    },
+    {
+      "id": "cat-security",
+      "description": "Security guard service",
+      "imageUrl": "https://images.unsplash.com/photo-1541214184964-d90ddf59c88b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzZWN1cml0eSUyMGd1YXJkfGVufDB8fHx8MTc3MTY4MDc1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "security guard"
+    },
+    {
+      "id": "cat-washerman",
+      "description": "Laundry and washerman service",
+      "imageUrl": "https://images.unsplash.com/photo-1765176938654-ac6f04c1d86b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxsYXVuZHJ5JTIwd2FzaGluZ3xlbnwwfHx8fDE3NzE3NjQxMDh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laundry washing"
+    },
+    {
+      "id": "cat-helper",
+      "description": "Domestic helper service",
+      "imageUrl": "https://images.unsplash.com/photo-1718087036737-62d69f635ba3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxob3VzZSUyMGhlbHB8ZW58MHx8fHwxNzcxNzY0MTA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "house help"
+    },
+    {
+      "id": "cat-cook",
+      "description": "Professional cook and chef service",
+      "imageUrl": "https://images.unsplash.com/photo-1681270496598-13c5365730c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjaGVmJTIwY29va2luZ3xlbnwwfHx8fDE3NzE3NTkxMjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chef cooking"
+    },
+    {
+      "id": "cat-gardener",
+      "description": "Gardening service",
+      "imageUrl": "https://images.unsplash.com/photo-1599778147051-952e54daf3d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnYXJkZW5lciUyMHBsYW50aW5nfGVufDB8fHx8MTc3MTc2NDEwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gardener planting"
+    },
+    {
+      "id": "ven-supermarket",
+      "description": "Supermarket vendor",
+      "imageUrl": "https://images.unsplash.com/photo-1542838132-92c53300491e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzdXBlcm1hcmtldCUyMGdyb2Nlcnl8ZW58MHx8fHwxNzcxNzY0MTcwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "supermarket grocery"
+    },
+    {
+      "id": "ven-butchery",
+      "description": "Butchery vendor",
+      "imageUrl": "https://images.unsplash.com/photo-1551028150-64b9f398f678?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "butcher shop"
+    },
+    {
+      "id": "ven-milkshop",
+      "description": "Milkshop vendor",
+      "imageUrl": "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "cow"
+    },
+    {
+      "id": "ven-waterplant",
+      "description": "Water Plant vendor",
+      "imageUrl": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "imageHint": "water bottles"
+    },
+    {
+      "id": "ven-gas",
+      "description": "Gas Cylinder vendor",
+      "imageUrl": "https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxnYXMlMjBjeWxpbmRlcnxlbnwwfHx8fDE3NzE3NjQxNzF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gas cylinder"
+    },
+    {
+      "id": "ven-fruits",
+      "description": "Fruits and Vegetables vendor",
+      "imageUrl": "https://images.unsplash.com/photo-1610348725531-843dff563e2c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmcnVpdCUyMHZlZ2V0YWJsZSUyMG1hcmtldHxlbnwwfHx8fDE3NzE3NjQxNzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fruit market"
+    }
+  ]
+}

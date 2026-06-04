@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 120 10% 99%;
+    --foreground: 240 28% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 28% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 28% 15%;
+    --primary: 168 94% 31%;
+    --primary-foreground: 168 100% 98%;
+    --secondary: 168 48% 88%;
+    --secondary-foreground: 168 40% 15%;
+    --muted: 120 20% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 168 48% 94%;
+    --accent-foreground: 168 40% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 120 20% 90%;
+    --input: 120 20% 90%;
+    --ring: 168 94% 31%;
+    --radius: 1rem;
+    --chart-1: 168 94% 31%;
+    --chart-2: 120 30% 55%;
+    --chart-3: 135 48% 88%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 240 28% 10%;
+    --foreground: 0 0% 98%;
+    --card: 240 28% 12%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 28% 12%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 168 94% 31%;
+    --primary-foreground: 240 28% 10%;
+    --secondary: 168 30% 20%;
+    --secondary-foreground: 168 94% 31%;
+    --muted: 240 28% 15%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 240 28% 15%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 28% 20%;
+    --input: 240 28% 20%;
+    --ring: 168 94% 31%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body;
+    overscroll-behavior-y: contain; /* Prevents default browser pull-to-refresh to use our custom one */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline font-semibold tracking-tight;
+  }
+}
+
+.glass-morphism {
+  @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
+}
+
+.muawin-card {
+  @apply rounded-[24px] border border-secondary/20 shadow-sm hover:shadow-md transition-all duration-300;
+}
