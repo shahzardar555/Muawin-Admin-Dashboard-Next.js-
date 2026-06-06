@@ -25,7 +25,7 @@ export default function VerificationPage() {
   const [providers, setProviders] = useState<VerificationEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'all' | 'under_review' | 'verified' | 'rejected'>('under_review');
+  const [filter, setFilter] = useState<'all' | 'under_review' | 'pending' | 'verified' | 'rejected'>('all');
 
   useEffect(() => {
     loadProviders();
@@ -125,7 +125,7 @@ export default function VerificationPage() {
 
       {/* Filter tabs */}
       <div className="flex gap-2 mb-6">
-        {(['under_review', 'all', 'verified', 'rejected'] as const).map(f => (
+        {(['all', 'pending', 'under_review', 'verified', 'rejected'] as const).map(f => (
           <Button
             key={f}
             variant={filter === f ? 'default' : 'outline'}
@@ -133,7 +133,10 @@ export default function VerificationPage() {
             onClick={() => setFilter(f)}
             className="rounded-xl capitalize"
           >
-            {f === 'under_review' ? 'Pending' : f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
+            {f === 'under_review' ? 'Under Review' : 
+  f === 'all' ? 'All' : 
+  f === 'pending' ? 'Pending' :
+  f.charAt(0).toUpperCase() + f.slice(1)}
           </Button>
         ))}
       </div>
