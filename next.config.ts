@@ -5,8 +5,13 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
+  eslint:  {
     ignoreDuringBuilds: true,
+  },
+  output: 'standalone',
+  experimental: {
+    // @ts-expect-error - valid runtime option even if not in types
+    missingSuspenseWithCSRBailout: false,
   },
   transpilePackages: ['lucide-react', 'recharts'],
   images: {
