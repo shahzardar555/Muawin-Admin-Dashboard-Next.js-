@@ -67,9 +67,9 @@ export default function ComplaintReviewPage() {
           priority,
           status,
           created_at,
-          customers!inner(
+          customers(
             id,
-            profiles!inner(full_name, profile_image_url)
+            profiles(full_name, profile_image_url)
           ),
           providers(
             id,
@@ -78,7 +78,7 @@ export default function ComplaintReviewPage() {
             completed_jobs,
             warning_count,
             flag_count,
-            profiles!inner(full_name, profile_image_url)
+            profiles(full_name, profile_image_url)
           ),
           jobs(
             id,
@@ -131,7 +131,7 @@ export default function ComplaintReviewPage() {
         },
       });
     } catch (e) {
-      console.error('Error loading complaint:', e);
+      console.error('Error loading complaint:', JSON.stringify(e));
     } finally {
       setLoading(false);
     }
@@ -219,7 +219,9 @@ export default function ComplaintReviewPage() {
           ? 'Warning issued to provider.'
           : selectedAction === 'flag'
           ? 'Account flagged successfully.'
-          : 'Account banned successfully.',
+          : selectedAction === 'ban'
+          ? `Account banned successfully. ${data?.provider?.name} banned for ${banDuration}.`
+          : 'Action completed.',
       });
 
     } catch (e: any) {
@@ -549,7 +551,10 @@ export default function ComplaintReviewPage() {
                   variant="ghost" 
                   disabled={actionCompleted}
                   className="w-full text-grey-400 font-bold text-[10px] uppercase tracking-widest border border-dashed border-grey-200 rounded-2xl h-12"
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    setModalOpen(false);
+                    setSelectedAction(null);
                     try {
                       const { error } = await adminSupabase
                         .from('complaints')
@@ -561,7 +566,7 @@ export default function ComplaintReviewPage() {
                       if (error) throw error;
                       setActionCompleted(true);
                       toast({
-                        title: 'Complaint Dismissed',
+                        title: 'Complaint Dismissed ✅',
                         description: 'The complaint has been dismissed.',
                       });
                     } catch (e: any) {

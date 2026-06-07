@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminSupabase } from '@/lib/admin-supabase';
+import { useToast } from '@/hooks/use-toast';
 import { 
   ArrowLeft, 
   Search, 
@@ -25,6 +26,7 @@ import { cn } from '@/lib/utils';
 
 export default function AllComplaintsPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [allComplaints, setAllComplaints] = useState<Array<{
@@ -56,14 +58,15 @@ export default function AllComplaintsPage() {
           priority,
           status,
           created_at,
-          customers!inner(
-            profiles!inner(full_name)
+          customers(
+            profiles(full_name)
           ),
           providers(
-            profiles!inner(full_name)
+            profiles(full_name)
           )
         `)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .not('status', 'in', '("archived","dismissed")');
 
       if (error) throw error;
 
@@ -182,11 +185,44 @@ export default function AllComplaintsPage() {
                   
                   <div className="flex items-center justify-between pt-3 border-t border-dashed border-grey-100">
                     <div className="flex gap-2">
-                      <Button size="sm" className={cn(
-                        "rounded-xl font-bold h-9 px-5 text-white shadow-sm",
-                        c.urgent ? "bg-red-600 hover:bg-red-700" : "bg-grey-800 hover:bg-grey-900"
-                      )}>Investigate Case</Button>
-                      <Button variant="ghost" size="sm" className="rounded-xl font-bold text-grey-400 hover:bg-grey-100 h-9">Archive</Button>
+                      {c.status !== 'Resolved' && (
+                        <Button size="sm" onClick={() => router.push(`/admin/complaint/${c.fullId}`)} className={cn(
+                          "rounded-xl font-bold h-9 px-5 text-white shadow-sm",
+                          c.urgent ? "bg-red-600 hover:bg-red-700" : "bg-grey-800 hover:bg-grey-900"
+                        )}>Investigate Case</Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 rounded-lg text-grey-400 hover:text-red-500 text-[10px] font-bold uppercase"
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          try {
+                            await adminSupabase
+                              .from('complaints')
+                              .update({ 
+                                status: 'archived',
+                                updated_at: new Date().toISOString()
+                              })
+                              .eq('id', c.fullId);
+                            setAllComplaints(prev => 
+                              prev.filter(comp => comp.fullId !== c.fullId)
+                            );
+                            toast({
+                              title: 'Complaint Archived',
+                              description: 'Complaint has been archived.',
+                            });
+                          } catch (e) {
+                            toast({
+                              variant: 'destructive',
+                              title: 'Error',
+                              description: 'Failed to archive complaint.',
+                            });
+                          }
+                        }}
+                      >
+                        Archive
+                      </Button>
                     </div>
                     <ChevronRight className="w-5 h-5 text-grey-300 group-hover:text-primary transition-colors" />
                   </div>

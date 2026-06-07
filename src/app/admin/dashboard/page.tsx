@@ -45,6 +45,7 @@ export default function AdminDashboard() {
 
   const [complaints, setComplaints] = useState<Array<{
     id: string;
+    fullId: string;
     title: string;
     desc: string;
     urgent: boolean;
@@ -98,7 +99,7 @@ export default function AdminDashboard() {
           created_at,
           profiles!inner(full_name)
         `, { count: 'exact' })
-        .eq('verification_status', 'under_review')
+          .in('verification_status', ['pending', 'under_review'])
         .order('created_at', { ascending: false })
         .limit(5);
 
@@ -135,6 +136,7 @@ export default function AdminDashboard() {
 
       setComplaints((complaintsData || []).map((c: any) => ({
         id: c.id.substring(0, 8).toUpperCase(),
+        fullId: c.id,
         title: c.complaint_type || 'Complaint',
         desc: c.description || '',
         urgent: c.priority === 'high' || c.priority === 'critical',
@@ -236,7 +238,7 @@ export default function AdminDashboard() {
         <div>
           <div className="flex items-center gap-2.5 mb-2">
             <div className="w-10 h-10 flex items-center justify-center">
-              <MuawinIcon className="w-8 h-8 text-primary" />
+              <img src="/mlogo.png" alt="Muawin Logo" className="w-8 h-8 object-contain" />
             </div>
             <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Muawin Dashboard</span>
           </div>
@@ -394,7 +396,7 @@ export default function AdminDashboard() {
                   "muawin-card p-6 border-none space-y-4 cursor-pointer hover:shadow-md transition-all",
                   complaint.urgent ? "bg-red-50/50 hover:bg-red-50" : "bg-white hover:bg-grey-50"
                 )}
-                onClick={() => router.push(`/admin/complaint/${complaint.id}`)}
+                  onClick={() => router.push(`/admin/complaint/${complaint.fullId}`)}
               >
                 <div className="flex items-start gap-4">
                   <div className={cn(

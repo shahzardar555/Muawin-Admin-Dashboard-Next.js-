@@ -69,9 +69,7 @@ export default function VerificationDetailsPage() {
               profile_image_url,
               created_at
             ),
-            service_categories(
-              name
-            )
+            service_category
           `)
           .eq('id', params.id)
           .single();
@@ -142,7 +140,7 @@ export default function VerificationDetailsPage() {
   if (!providerData) return null;
   
   const profile = providerData.profiles;
-  const category = providerData.service_categories?.name || 'N/A';
+  const category = providerData.service_category || 'N/A';
   
   const match = {
     decision: faceMatchData?.decision || 'PENDING',
