@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { Suspense, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Loader2, Mail, Phone, CheckCircle2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-export default function VerifyOtpPage() {
+function VerifyOtpPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
@@ -117,7 +117,7 @@ export default function VerifyOtpPage() {
           {otp.map((digit, i) => (
             <Input
               key={i}
-              ref={el => (inputs.current[i] = el)}
+              ref={el => { inputs.current[i] = el; }}
               type="number"
               value={digit}
               onChange={e => handleChange(i, e.target.value)}
@@ -149,5 +149,17 @@ export default function VerifyOtpPage() {
         <span className="text-[10px] font-bold uppercase tracking-widest">Verification ensures account security</span>
       </footer>
     </div>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <VerifyOtpPageContent />
+    </Suspense>
   );
 }
