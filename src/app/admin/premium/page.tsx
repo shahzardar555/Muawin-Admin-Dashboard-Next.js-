@@ -86,7 +86,8 @@ export default function PremiumCustomersPage() {
         const daysLeft = Math.ceil((expiry.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
         return {
           id: s.customers?.id?.substring(0, 8).toUpperCase() || 'N/A',
-          fullId: s.customers?.profiles?.id || s.customers?.id || '',
+          fullId: s.customers?.id || '',
+          profileId: s.customers?.profiles?.id || '',
           subId: s.id,
           name: s.customers?.profiles?.full_name || 'Customer',
           email: s.customers?.profiles?.email || '',
@@ -129,10 +130,12 @@ export default function PremiumCustomersPage() {
           .eq('id', customer.subId);
 
         if (customer?.fullId) {
-          await adminSupabase
+          const { error: customerError } = await adminSupabase
             .from('customers')
             .update({ is_pro: false, pro_expiry_date: null })
             .eq('id', customer.fullId);
+          
+          if (customerError) throw customerError;
         }
       }
       setCustomers(prev => prev.filter(c => c.id !== revokingId));
@@ -199,7 +202,7 @@ export default function PremiumCustomersPage() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <button 
-                      onClick={() => router.push(`/admin/users/${customer.fullId}`)}
+                      onClick={() => router.push(`/admin/users/${customer.profileId}`)}
                       className="text-lg font-bold text-grey-900 hover:text-primary transition-colors text-left"
                     >
                       {customer.name}

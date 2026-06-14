@@ -56,6 +56,7 @@ export default function ManageAccountPage() {
   const [reviews, setReviews] = useState<any[]>([]);
   const [adminNote, setAdminNote] = useState('');
   const [saving, setSaving] = useState(false);
+  const [documents, setDocuments] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -74,10 +75,7 @@ export default function ManageAccountPage() {
         if (profile.role === 'provider') {
           const { data: providerData } = await adminSupabase
             .from('providers')
-            .select(`
-              *,
-              service_categories(name)
-            `)
+            .select('*')
             .eq('profile_id', profile.id)
             .single();
           setUserData({ ...profile, providerDetails: providerData });
@@ -108,6 +106,16 @@ export default function ManageAccountPage() {
             .order('created_at', { ascending: false })
             .limit(5);
           setReviews(reviewsData || []);
+
+          // Fetch provider documents
+          console.log('Fetching docs for provider ID:', providerData?.id);
+          const { data: docsData } = await adminSupabase
+            .from('provider_documents')
+            .select('id, file_name, document_type, status, file_url, expiry_date, uploaded_at')
+            .eq('provider_id', providerData?.id)
+            .order('uploaded_at', { ascending: false });
+          console.log('Documents found:', docsData);
+          setDocuments(docsData || []);
 
         } else if (profile.role === 'customer') {
           const { data: customerData } = await adminSupabase
@@ -186,9 +194,22 @@ export default function ManageAccountPage() {
   };
 
   const handleSendEmail = () => {
+    if (!userData?.email) {
+      toast({
+        variant: 'destructive',
+        title: 'No Email',
+        description: 'This user has no email address on file.',
+      });
+      return;
+    }
+    const subject = encodeURIComponent('Muawin Platform - Important Notice');
+    const body = encodeURIComponent(
+      `Dear ${userData?.full_name || 'User'},\n\nThis is a message from the Muawin Admin Team.\n\n`
+    );
+    window.open(`mailto:${userData.email}?subject=${subject}&body=${body}`, '_blank');
     toast({
-      title: "Mail Interface",
-      description: `Opening email composer for ${userData?.email || 'N/A'}`,
+      title: 'Email Composer Opened',
+      description: `Composing email to ${userData.email}`,
     });
   };
 
@@ -549,6 +570,88 @@ export default function ManageAccountPage() {
                   )}
                 </div>
               </Card>
+
+              {/* Document Library */}
+              {userData?.role === 'provider' && (
+                <Card className="rounded-2xl border border-grey-100 p-6 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-bold text-grey-900 flex items-center gap-2">
+                      📁 Document Library
+                    </h3>
+                    <span className="text-[10px] font-black text-grey-400 uppercase tracking-widest">
+                      {documents.length} file{documents.length !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+
+                  {documents.length === 0 ? (
+                    <p className="text-sm text-grey-400 text-center py-6">
+                      No documents uploaded yet.
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      {documents.map((doc: any) => (
+                        <div 
+                          key={doc.id}
+                          className="flex items-center justify-between p-3 bg-grey-50 rounded-xl border border-grey-100 group"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-white border border-grey-200 flex items-center justify-center shrink-0 text-base">
+                              {doc.file_name?.endsWith('.pdf') ? '📄' : 
+                               doc.file_name?.endsWith('.png') || doc.file_name?.endsWith('.jpg') || doc.file_name?.endsWith('.jpeg') ? '🖼️' : '📎'}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-bold text-grey-900 truncate max-w-[200px]">
+                                {doc.file_name || 'Document'}
+                              </p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-[10px] font-bold text-grey-400 uppercase tracking-wider">
+                                  {doc.document_type || 'document'}
+                                </span>
+                                <span className="text-grey-200">•</span>
+                                <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                                  doc.status === 'verified' ? 'text-green-600' :
+                                  doc.status === 'rejected' ? 'text-red-500' :
+                                  'text-yellow-600'
+                                }`}>
+                                  {doc.status || 'pending'}
+                                </span>
+                                {doc.expiry_date && (
+                                  <>
+                                    <span className="text-grey-200">•</span>
+                                    <span className="text-[10px] font-medium text-grey-400">
+                                      Expires: {new Date(doc.expiry_date).toLocaleDateString('en-PK')}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] text-grey-300 font-medium hidden group-hover:block">
+                              {new Date(doc.uploaded_at).toLocaleDateString('en-PK')}
+                            </span>
+                            
+                            <a
+                              href={doc.file_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="h-8 w-8 rounded-lg bg-white border border-grey-200 flex items-center justify-center hover:bg-primary hover:border-primary hover:text-white transition-all text-grey-500"
+                              title="View Document"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <polyline points="15 3 21 3 21 9"/>
+                                <line x1="10" y1="14" x2="21" y2="3"/>
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              )}
             </>
           )}
 
