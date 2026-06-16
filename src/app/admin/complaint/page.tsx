@@ -35,6 +35,7 @@ export default function AllComplaintsPage() {
     title: string;
     customer: string;
     provider: string;
+    filedBy: string;
     desc: string;
     urgent: boolean;
     time: string;
@@ -58,6 +59,7 @@ export default function AllComplaintsPage() {
           priority,
           status,
           created_at,
+          filed_by,
           customers(
             profiles(full_name)
           ),
@@ -76,6 +78,7 @@ export default function AllComplaintsPage() {
         title: c.complaint_type || 'Complaint',
         customer: c.customers?.profiles?.full_name || 'Customer',
         provider: c.providers?.profiles?.full_name || 'Provider',
+        filedBy: c.filed_by || 'customer',
         desc: c.description || '',
         urgent: c.priority === 'high' || c.priority === 'critical',
         time: new Date(c.created_at).toLocaleDateString('en-PK'),
@@ -174,7 +177,7 @@ export default function AllComplaintsPage() {
                         {c.urgent && <Badge className="bg-red-500 text-white border-none font-black text-[9px] uppercase tracking-widest px-2 h-5">URGENT</Badge>}
                         {c.status === 'Resolved' && <Badge className="bg-green-100 text-green-700 border-none font-black text-[9px] uppercase tracking-widest px-2 h-5">RESOLVED</Badge>}
                       </h4>
-                      <p className="text-xs text-grey-400 font-bold uppercase tracking-tighter">Job #{c.id} • {c.customer} vs {c.provider}</p>
+                      <p className="text-xs text-grey-400 font-bold uppercase tracking-tighter">Job #{c.id} • {c.filedBy === 'provider' ? `${c.provider} → filed against → ${c.customer}` : `${c.customer} vs ${c.provider}`}</p>
                     </div>
                     <span className="text-[10px] text-grey-400 font-bold uppercase tracking-widest flex items-center gap-1.5 bg-grey-50 px-2 py-1 rounded-lg">
                       <Clock className="w-3 h-3" /> {c.time}

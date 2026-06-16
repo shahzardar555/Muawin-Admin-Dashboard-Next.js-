@@ -67,6 +67,7 @@ export default function ComplaintReviewPage() {
           priority,
           status,
           created_at,
+          filed_by,
           customers(
             id,
             profiles(full_name, profile_image_url)
@@ -97,6 +98,8 @@ export default function ComplaintReviewPage() {
       const custProfile = Array.isArray(cust?.profiles) ? cust.profiles[0] : cust?.profiles;
       const provProfile = Array.isArray(prov?.profiles) ? prov.profiles[0] : prov?.profiles;
 
+      const filedBy = complaint.filed_by || 'customer';
+
       setData({
         id: complaint.id.substring(0, 8).toUpperCase(),
         fullId: complaint.id,
@@ -105,6 +108,7 @@ export default function ComplaintReviewPage() {
         urgent: complaint.priority === 'high' || complaint.priority === 'critical',
         time: new Date(complaint.created_at).toLocaleDateString('en-PK'),
         status: complaint.status === 'resolved' ? 'Resolved' : 'In Review',
+        filedBy: filedBy,
         jobDetails: {
           id: job?.id?.substring(0, 8).toUpperCase() ?? 'N/A',
           date: new Date(complaint.created_at).toLocaleDateString('en-PK'),
@@ -115,6 +119,7 @@ export default function ComplaintReviewPage() {
         customer: {
           name: custProfile?.full_name ?? 'Customer',
           id: cust?.id?.substring(0, 8).toUpperCase() ?? 'N/A',
+          rawId: cust?.id ?? null,
           rating: 0,
           history: '0 Jobs',
           avatar: custProfile?.profile_image_url ?? null,
@@ -398,76 +403,144 @@ export default function ComplaintReviewPage() {
           </Card>
 
           {/* Card 3: Parties Involved */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Customer Profile */}
-            <Card className="rounded-[32px] border-none shadow-sm p-6 bg-white space-y-4">
-              <div className="flex items-center justify-between border-b pb-4">
-                <h4 className="text-[10px] font-black text-grey-400 uppercase tracking-[0.2em]">Reporter</h4>
-                <Badge className="bg-blue-50 text-blue-600 border-none font-bold text-[10px]">CUSTOMER</Badge>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-surface shadow-sm bg-grey-100 flex items-center justify-center">
-                  {data.customer.avatar ? (
-                    <img src={data.customer.avatar} alt="C" className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-xl font-bold text-grey-400">{data.customer.name.charAt(0)}</span>
-                  )}
+          {data.filedBy === 'provider' ? (
+            /* Provider filed against Customer */
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Reporter: Provider */}
+              <Card className="rounded-[32px] border-none shadow-sm p-6 bg-white space-y-4">
+                <div className="flex items-center justify-between border-b pb-4">
+                  <h4 className="text-[10px] font-black text-grey-400 uppercase tracking-[0.2em]">Reporter</h4>
+                  <Badge className="bg-primary/10 text-primary border-none font-bold text-[10px]">PROVIDER</Badge>
                 </div>
-                <div>
-                  <h5 className="font-bold text-grey-900">{data.customer.name}</h5>
-                  <p className="text-xs text-grey-500">ID: {data.customer.id}</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-surface shadow-sm bg-grey-100 flex items-center justify-center">
+                    {data.provider.avatar ? (
+                      <img src={data.provider.avatar} alt="P" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xl font-bold text-grey-400">{data.provider.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-grey-900">{data.provider.name}</h5>
+                    <p className="text-xs text-grey-500">ID: {data.provider.id}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2 pt-2">
-                <div className="text-center p-2 bg-surface rounded-xl">
-                  <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Rating</p>
-                  <p className="text-xs font-bold text-grey-700">{data.customer.rating} ★</p>
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div className="text-center p-2 bg-surface rounded-xl">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Rating</p>
+                    <p className="text-xs font-bold text-grey-700">{data.provider.rating} ★</p>
+                  </div>
+                  <div className="text-center p-2 bg-surface rounded-xl">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Jobs</p>
+                    <p className="text-xs font-bold text-grey-700">{data.provider.history.split(' ')[0]}</p>
+                  </div>
                 </div>
-                <div className="text-center p-2 bg-surface rounded-xl">
-                  <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Usage</p>
-                  <p className="text-xs font-bold text-grey-700">{data.customer.history}</p>
-                </div>
-              </div>
-            </Card>
+              </Card>
 
-            {/* Provider Profile */}
-            <Card className={cn(
-              "rounded-[32px] border-none shadow-sm p-6 space-y-4",
-              data.provider.strikes > 0 ? "bg-amber-50 ring-1 ring-amber-200" : "bg-white"
-            )}>
-              <div className="flex items-center justify-between border-b pb-4">
-                <h4 className="text-[10px] font-black text-grey-400 uppercase tracking-[0.2em]">Accused</h4>
-                <Badge className="bg-primary/10 text-primary border-none font-bold text-[10px]">PROVIDER</Badge>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-grey-100 flex items-center justify-center">
-                  {data.provider.avatar ? (
-                    <img src={data.provider.avatar} alt="P" className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-xl font-bold text-grey-400">{data.provider.name.charAt(0)}</span>
-                  )}
+              {/* Accused: Customer */}
+              <Card className="rounded-[32px] border-none shadow-sm p-6 bg-white space-y-4">
+                <div className="flex items-center justify-between border-b pb-4">
+                  <h4 className="text-[10px] font-black text-grey-400 uppercase tracking-[0.2em]">Accused</h4>
+                  <Badge className="bg-blue-50 text-blue-600 border-none font-bold text-[10px]">CUSTOMER</Badge>
                 </div>
-                <div>
-                  <h5 className="font-bold text-grey-900">{data.provider.name}</h5>
-                  <p className="text-xs text-grey-500">ID: {data.provider.id}</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-grey-100 flex items-center justify-center">
+                    {data.customer.avatar ? (
+                      <img src={data.customer.avatar} alt="C" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xl font-bold text-grey-400">{data.customer.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-grey-900">{data.customer.name}</h5>
+                    <p className="text-xs text-grey-500">ID: {data.customer.id}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2 pt-2">
-                <div className="text-center p-2 bg-white rounded-xl shadow-sm border border-grey-50">
-                  <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Rating</p>
-                  <p className="text-xs font-bold text-grey-700">{data.provider.rating} ★</p>
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div className="text-center p-2 bg-surface rounded-xl">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Rating</p>
+                    <p className="text-xs font-bold text-grey-700">{data.customer.rating} ★</p>
+                  </div>
+                  <div className="text-center p-2 bg-surface rounded-xl">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Usage</p>
+                    <p className="text-xs font-bold text-grey-700">{data.customer.history}</p>
+                  </div>
                 </div>
-                <div className="text-center p-2 bg-white rounded-xl shadow-sm border border-grey-50">
-                  <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Strikes</p>
-                  <p className={cn("text-xs font-bold", data.provider.strikes > 0 ? "text-red-600" : "text-grey-700")}>{data.provider.strikes}</p>
+              </Card>
+            </div>
+          ) : (
+            /* Customer filed against Provider (default) */
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Reporter: Customer */}
+              <Card className="rounded-[32px] border-none shadow-sm p-6 bg-white space-y-4">
+                <div className="flex items-center justify-between border-b pb-4">
+                  <h4 className="text-[10px] font-black text-grey-400 uppercase tracking-[0.2em]">Reporter</h4>
+                  <Badge className="bg-blue-50 text-blue-600 border-none font-bold text-[10px]">CUSTOMER</Badge>
                 </div>
-                <div className="text-center p-2 bg-white rounded-xl shadow-sm border border-grey-50">
-                  <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Jobs</p>
-                  <p className="text-xs font-bold text-grey-700">{data.provider.history.split(' ')[0]}</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-surface shadow-sm bg-grey-100 flex items-center justify-center">
+                    {data.customer.avatar ? (
+                      <img src={data.customer.avatar} alt="C" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xl font-bold text-grey-400">{data.customer.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-grey-900">{data.customer.name}</h5>
+                    <p className="text-xs text-grey-500">ID: {data.customer.id}</p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </div>
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div className="text-center p-2 bg-surface rounded-xl">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Rating</p>
+                    <p className="text-xs font-bold text-grey-700">{data.customer.rating} ★</p>
+                  </div>
+                  <div className="text-center p-2 bg-surface rounded-xl">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Usage</p>
+                    <p className="text-xs font-bold text-grey-700">{data.customer.history}</p>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Accused: Provider */}
+              <Card className={cn(
+                "rounded-[32px] border-none shadow-sm p-6 space-y-4",
+                data.provider.strikes > 0 ? "bg-amber-50 ring-1 ring-amber-200" : "bg-white"
+              )}>
+                <div className="flex items-center justify-between border-b pb-4">
+                  <h4 className="text-[10px] font-black text-grey-400 uppercase tracking-[0.2em]">Accused</h4>
+                  <Badge className="bg-primary/10 text-primary border-none font-bold text-[10px]">PROVIDER</Badge>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-white shadow-sm bg-grey-100 flex items-center justify-center">
+                    {data.provider.avatar ? (
+                      <img src={data.provider.avatar} alt="P" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xl font-bold text-grey-400">{data.provider.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-grey-900">{data.provider.name}</h5>
+                    <p className="text-xs text-grey-500">ID: {data.provider.id}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2 pt-2">
+                  <div className="text-center p-2 bg-white rounded-xl shadow-sm border border-grey-50">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Rating</p>
+                    <p className="text-xs font-bold text-grey-700">{data.provider.rating} ★</p>
+                  </div>
+                  <div className="text-center p-2 bg-white rounded-xl shadow-sm border border-grey-50">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Strikes</p>
+                    <p className={cn("text-xs font-bold", data.provider.strikes > 0 ? "text-red-600" : "text-grey-700")}>{data.provider.strikes}</p>
+                  </div>
+                  <div className="text-center p-2 bg-white rounded-xl shadow-sm border border-grey-50">
+                    <p className="text-[9px] font-bold text-grey-400 uppercase tracking-tighter">Jobs</p>
+                    <p className="text-xs font-bold text-grey-700">{data.provider.history.split(' ')[0]}</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          )}
         </div>
 
         {/* RIGHT COLUMN: ACTIONS */}
