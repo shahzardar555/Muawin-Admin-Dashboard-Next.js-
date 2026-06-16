@@ -414,7 +414,7 @@ export default function VerificationDetailsPage() {
                     <CheckCircle2 className="w-3.5 h-3.5" /> Face Detected
                   </div>
                   <p className="text-[10px] font-medium text-grey-400 tracking-tight">
-                    99% confident • Position X:100 Y:50
+                    {faceMatchData?.cnic_face_confidence || 0}% confident • Position X:{faceMatchData?.cnic_face_location?.x || 0} Y:{faceMatchData?.cnic_face_location?.y || 0}
                   </p>
                 </div>
               </div>
@@ -448,7 +448,7 @@ export default function VerificationDetailsPage() {
                     <CheckCircle2 className="w-3.5 h-3.5" /> Face Detected
                   </div>
                   <p className="text-[10px] font-medium text-grey-400 tracking-tight">
-                    98% confident • Captured 2024-01-15
+                    {faceMatchData?.selfie_face_confidence || 0}% confident • Captured {providerData?.created_at ? new Date(providerData.created_at).toLocaleDateString('en-PK') : 'N/A'}
                   </p>
                 </div>
               </div>
@@ -498,27 +498,27 @@ export default function VerificationDetailsPage() {
                         <tbody className="divide-y divide-grey-100">
                           <tr className="bg-white">
                             <td className="p-3 text-grey-500 font-medium">Face Detected</td>
-                            <td className="p-3 text-right font-bold text-green-600">✅ Yes</td>
+                            <td className="p-3 text-right font-bold text-green-600">{faceMatchData?.cnic_face_detected ? '✅ Yes' : '❌ No'}</td>
                           </tr>
                           <tr className="bg-grey-50">
                             <td className="p-3 text-grey-500 font-medium">Confidence</td>
-                            <td className="p-3 text-right font-bold text-grey-900">99.0%</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{faceMatchData?.cnic_face_confidence ? `${faceMatchData.cnic_face_confidence}%` : 'N/A'}</td>
                           </tr>
                           <tr className="bg-white">
                             <td className="p-3 text-grey-500 font-medium">Face Location X</td>
-                            <td className="p-3 text-right font-bold text-grey-900">100px</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{faceMatchData?.cnic_face_location?.x ? `${faceMatchData.cnic_face_location.x}px` : 'N/A'}</td>
                           </tr>
                           <tr className="bg-grey-50">
                             <td className="p-3 text-grey-500 font-medium">Face Location Y</td>
-                            <td className="p-3 text-right font-bold text-grey-900">50px</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{faceMatchData?.cnic_face_location?.y ? `${faceMatchData.cnic_face_location.y}px` : 'N/A'}</td>
                           </tr>
                           <tr className="bg-white">
                             <td className="p-3 text-grey-500 font-medium">Face Width</td>
-                            <td className="p-3 text-right font-bold text-grey-900">150px</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{faceMatchData?.cnic_face_location?.w ? `${faceMatchData.cnic_face_location.w}px` : 'N/A'}</td>
                           </tr>
                           <tr className="bg-grey-50">
                             <td className="p-3 text-grey-500 font-medium">Face Height</td>
-                            <td className="p-3 text-right font-bold text-grey-900">180px</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{faceMatchData?.cnic_face_location?.h ? `${faceMatchData.cnic_face_location.h}px` : 'N/A'}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -533,19 +533,19 @@ export default function VerificationDetailsPage() {
                         <tbody className="divide-y divide-grey-100">
                           <tr className="bg-white">
                             <td className="p-3 text-grey-500 font-medium">Face Detected</td>
-                            <td className="p-3 text-right font-bold text-green-600">✅ Yes</td>
+                            <td className="p-3 text-right font-bold text-green-600">{faceMatchData?.selfie_face_detected ? '✅ Yes' : '❌ No'}</td>
                           </tr>
                           <tr className="bg-grey-50">
                             <td className="p-3 text-grey-500 font-medium">Confidence</td>
-                            <td className="p-3 text-right font-bold text-grey-900">98.0%</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{faceMatchData?.selfie_face_confidence ? `${faceMatchData.selfie_face_confidence}%` : 'N/A'}</td>
                           </tr>
                           <tr className="bg-white">
                             <td className="p-3 text-grey-500 font-medium">Capture Environment</td>
-                            <td className="p-3 text-right font-bold text-grey-900">Mobile</td>
+                            <td className="p-3 text-right font-bold text-grey-900">{providerData?.cnic_front_url ? 'Mobile' : 'N/A'}</td>
                           </tr>
                           <tr className="bg-grey-50">
                             <td className="p-3 text-grey-500 font-medium">Liveness Check</td>
-                            <td className="p-3 text-right font-bold text-green-600">Passed</td>
+                            <td className="p-3 text-right font-bold text-green-600">{faceMatchData?.is_match ? 'Passed' : 'Not Verified'}</td>
                           </tr>
                         </tbody>
                       </table>
